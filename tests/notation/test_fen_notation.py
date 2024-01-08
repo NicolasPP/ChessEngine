@@ -1,6 +1,14 @@
 import pytest
 
-import notation.forsyth_edwards_notation as notation
+from chess_engine.notation.forsyth_edwards_notation import Fen
+from chess_engine.notation.forsyth_edwards_notation import FenChars
+from chess_engine.notation.forsyth_edwards_notation import decode_fen_notation
+from chess_engine.notation.forsyth_edwards_notation import encode_fen_data
+from chess_engine.notation.forsyth_edwards_notation import FenData
+from chess_engine.notation.forsyth_edwards_notation import validate_fen_castling_rights
+from chess_engine.notation.forsyth_edwards_notation import validate_fen_full_move_number
+from chess_engine.notation.forsyth_edwards_notation import validate_fen_active_color
+from chess_engine.notation.forsyth_edwards_notation import validate_fen_half_move_clock
 
 
 @pytest.mark.parametrize("index,expected", [
@@ -14,13 +22,13 @@ import notation.forsyth_edwards_notation as notation
     (7, 'r'),
 ])
 def test_fen_getitem(index, expected):
-    fen = notation.Fen()
+    fen = Fen()
     assert fen[index] == expected
 
 
 @pytest.mark.parametrize("index", [64, -1])
 def test_invalid_fen_getitem(index):
-    fen = notation.Fen()
+    fen = Fen()
     with pytest.raises(IndexError):
         fen[index]
 
@@ -40,8 +48,8 @@ def test_invalid_fen_getitem(index):
       '@', '@', 'P', 'P', 'P', 'P', '@', 'P', 'P', 'P', 'R', 'N', 'B', 'Q', 'K', 'B', '@', 'R'])
 ])
 def test_expand_fen(fen_notation, expected):
-    assert notation.Fen(fen_notation).expanded == expected
-    assert len(notation.Fen(fen_notation).expanded) == 64
+    assert Fen(fen_notation).expanded == expected
+    assert len(Fen(fen_notation).expanded) == 64
 
 
 @pytest.mark.parametrize("expanded_fen,expected", [
@@ -59,7 +67,7 @@ def test_expand_fen(fen_notation, expected):
      "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R")
 ])
 def test_pack_fen(expanded_fen, expected):
-    fen = notation.Fen()
+    fen = Fen()
     fen.expanded = expanded_fen
     packed = fen.get_packed()
     assert packed == expected
@@ -75,7 +83,7 @@ def test_pack_fen(expanded_fen, expected):
     'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 ])
 def test_fen_validation(fen_notation: str):
-    assert notation.Fen(fen_notation)
+    assert Fen(fen_notation)
 
 
 @pytest.mark.parametrize("fen_notation", [
@@ -86,7 +94,7 @@ def test_fen_validation(fen_notation: str):
 ])
 def test_fail_fen_validation(fen_notation: str):
     with pytest.raises(Exception):
-        assert notation.Fen(fen_notation)
+        assert Fen(fen_notation)
 
 
 @pytest.mark.parametrize("fen_notation", [
@@ -98,39 +106,39 @@ def test_fail_fen_validation(fen_notation: str):
     'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 ])
 def test_fen_repr(fen_notation):
-    assert len(notation.Fen(fen_notation).__repr__()) is 71
-    assert len(notation.Fen(fen_notation).__repr__().split('\n')) is 8
+    assert len(Fen(fen_notation).__repr__()) is 71
+    assert len(Fen(fen_notation).__repr__().split('\n')) is 8
 
 
 def test_fen_setitem():
-    fen = notation.Fen('8/8/8/8/8/8/8/8 w KQkq - 0 1')
+    fen = Fen('8/8/8/8/8/8/8/8 w KQkq - 0 1')
     fen[10] = 'k'
     assert fen[10] is 'k'
     fen[10] = fen[0]
-    assert fen[10] is notation.FenChars.BLANK_PIECE
-    assert fen[0] is notation.FenChars.BLANK_PIECE
+    assert fen[10] is FenChars.BLANK_PIECE
+    assert fen[0] is FenChars.BLANK_PIECE
 
 
 def test_fen_notation():
-    fen = notation.Fen()
+    fen = Fen()
     fen.notation = '8/8/8/8/8/8/8/8 w KQkq - 0 1'
-    assert fen.notation == notation.encode_fen_data(fen.data)
+    assert fen.notation == encode_fen_data(fen.data)
     del fen.notation
 
 
 def test_fen_str():
-    fen = notation.Fen()
+    fen = Fen()
     assert str(fen) == 'fen : ' + fen.data.piece_placement + '\n' + fen.__repr__()
 
 
 @pytest.mark.parametrize("fen_notation,expected", [
     ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-     notation.FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "w", "KQkq", "-", "0", "1")),
+     FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "w", "KQkq", "-", "0", "1")),
     ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 3 1",
-     notation.FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "b", "KQkq", "-", "3", "1")),
+     FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "b", "KQkq", "-", "3", "1")),
 ])
 def test_decode_fen_notation(fen_notation, expected):
-    assert notation.decode_fen_notation(fen_notation) == expected
+    assert decode_fen_notation(fen_notation) == expected
 
 
 @pytest.mark.parametrize("fen_notation", [
@@ -139,21 +147,21 @@ def test_decode_fen_notation(fen_notation, expected):
 ])
 def test_fail_decode_fen_notation(fen_notation):
     with pytest.raises(Exception):
-        notation.decode_fen_notation(fen_notation)
+        decode_fen_notation(fen_notation)
 
 
 @pytest.mark.parametrize("fen_data,expected", [
-    (notation.FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "w", "KQkq", "-", "0", "1"),
+    (FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "w", "KQkq", "-", "0", "1"),
      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
-    (notation.FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "b", "KQkq", "-", "3", "1"),
+    (FenData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", "b", "KQkq", "-", "3", "1"),
      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 3 1",),
 ])
-def test_encode_fen_notation(fen_data: notation.FenData, expected: str):
-    assert notation.encode_fen_data(fen_data) == expected
+def test_encode_fen_notation(fen_data: FenData, expected: str):
+    assert encode_fen_data(fen_data) == expected
 
 
 def test_get_next_active_color():
-    f = notation.Fen()
+    f = Fen()
     assert f.data.active_color == 'w'
     f.make_move(30, 33, f[30])
     assert f.data.active_color == 'b'
@@ -164,7 +172,7 @@ def test_get_next_active_color():
 
 
 def test_get_full_move_number():
-    f = notation.Fen()
+    f = Fen()
     assert f.data.full_move_number == '1'
     f.make_move(30, 33, f[30])
     assert f.data.full_move_number == '1'
@@ -173,7 +181,7 @@ def test_get_full_move_number():
 
 
 def test_get_half_move_number():
-    f = notation.Fen()
+    f = Fen()
     assert f.data.half_move_clock == '0'
     f.make_move(1, 16, f[1])
     assert f.data.half_move_clock == '1'
@@ -182,25 +190,25 @@ def test_get_half_move_number():
 
 
 def test_get_en_passant_rights():
-    f = notation.Fen("8/1ppppppp/8/p7/8/8/PPPPPPPP/8 b KQkq - 0 1")
+    f = Fen("8/1ppppppp/8/p7/8/8/PPPPPPPP/8 b KQkq - 0 1")
     assert f.get_en_passant_rights('p', 8, 24) == 'a6'
-    f = notation.Fen("8/1ppppppp/8/p7/P7/8/1PPPPPPP/8 w KQkq - 0 1")
+    f = Fen("8/1ppppppp/8/p7/P7/8/1PPPPPPP/8 w KQkq - 0 1")
     assert f.get_en_passant_rights('P', 48, 32) == 'a3'
 
 
 def test_get_castling_rights():
-    f = notation.Fen("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1")
+    f = Fen("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1")
     assert f.get_castling_rights('K', 60) == 'kq'
-    f = notation.Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1")
+    f = Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1")
     assert f.get_castling_rights('k', 4) == 'KQ'
-    f = notation.Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1")
+    f = Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1")
     assert f.get_castling_rights('r', 0) == 'KQk'
-    f = notation.Fen('r3k2r/8/8/8/8/8/7R/R3K3 w KQkq - 1 2')
+    f = Fen('r3k2r/8/8/8/8/8/7R/R3K3 w KQkq - 1 2')
     assert f.get_castling_rights('R', 63) == 'Qkq'
 
 
 def test_make_castle_move():
-    f = notation.Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1")
+    f = Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1")
     f.make_move(4, 0, f[4])
     assert f[2] == 'k'
     assert f[3] == 'r'
@@ -212,28 +220,28 @@ def test_make_castle_move():
 @pytest.mark.parametrize("full_move_number", ["k", "-1"])
 def test_validate_fen_full_move_number(full_move_number: str):
     with pytest.raises(Exception):
-        notation.validate_fen_full_move_number(full_move_number)
+        validate_fen_full_move_number(full_move_number)
 
 
 @pytest.mark.parametrize("active_color", ["h", "1", "*"])
 def test_validate_fen_active_color(active_color: str):
     with pytest.raises(Exception):
-        notation.validate_fen_active_color(active_color)
+        validate_fen_active_color(active_color)
 
 
 @pytest.mark.parametrize("half_move_clock", ["k", "-1", "101"])
 def test_validate_fen_half_move_clock(half_move_clock: str):
     with pytest.raises(Exception):
-        notation.validate_fen_half_move_clock(half_move_clock)
+        validate_fen_half_move_clock(half_move_clock)
 
 
 @pytest.mark.parametrize("en_passant_rights", ["10h", "a"])
 def test_validate_fen_en_passant_rights(en_passant_rights: str):
     with pytest.raises(Exception):
-        notation.validate_fen_half_move_clock(en_passant_rights)
+        validate_fen_half_move_clock(en_passant_rights)
 
 
 @pytest.mark.parametrize("castling_rights", ["QKqkk", "", "opsd"])
 def test_validate_fen_castling_rights(castling_rights: str):
     with pytest.raises(Exception):
-        notation.validate_fen_castling_rights(castling_rights)
+        validate_fen_castling_rights(castling_rights)

@@ -2,14 +2,14 @@ import dataclasses
 import re
 import typing
 
-from movement.piece_movement import get_available_moves
-from movement.piece_movement import is_pawn_promotion
-from movement.validate_move import is_check
-from movement.validate_move import is_checkmate
-from movement.validate_move import is_take
-from notation.algebraic_notation import AlgebraicNotation
-from notation.forsyth_edwards_notation import Fen
-from notation.forsyth_edwards_notation import FenChars
+from chess_engine.movement.piece_movement import get_available_moves
+from chess_engine.movement.piece_movement import is_pawn_promotion
+from chess_engine.movement.validate_move import is_check
+from chess_engine.movement.validate_move import is_checkmate
+from chess_engine.movement.validate_move import is_take
+from chess_engine.notation.algebraic_notation import AlgebraicNotation
+from chess_engine.notation.forsyth_edwards_notation import Fen
+from chess_engine.notation.forsyth_edwards_notation import FenChars
 
 TagPairs: typing.TypeAlias = dict[str, str]
 

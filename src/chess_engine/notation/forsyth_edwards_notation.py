@@ -1,8 +1,8 @@
 import dataclasses
 import typing
 
-from notation.algebraic_notation import AlgebraicNotation
-from notation.algebraic_notation import validate_file_and_rank
+from chess_engine.notation.algebraic_notation import AlgebraicNotation
+from chess_engine.notation.algebraic_notation import validate_file_and_rank
 from config import BOARD_SIZE
 from config import GAME_START_FEN
 

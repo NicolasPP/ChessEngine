@@ -1,8 +1,8 @@
-from movement.piece_movement import get_available_moves
-from movement.piece_movement import get_possible_threats
-from notation.forsyth_edwards_notation import Fen
-from notation.forsyth_edwards_notation import FenChars
-from notation.forsyth_edwards_notation import InsufficientMaterialInfo
+from chess_engine.movement.piece_movement import get_available_moves
+from chess_engine.movement.piece_movement import get_possible_threats
+from chess_engine.notation.forsyth_edwards_notation import Fen
+from chess_engine.notation.forsyth_edwards_notation import FenChars
+from chess_engine.notation.forsyth_edwards_notation import InsufficientMaterialInfo
 
 
 def is_move_valid(from_index: int, dest_index: int, fen: Fen) -> bool:

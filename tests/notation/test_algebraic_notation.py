@@ -1,6 +1,6 @@
 import pytest
 
-from notation.algebraic_notation import AlgebraicNotation
+from chess_engine.notation.algebraic_notation import AlgebraicNotation
 
 
 @pytest.mark.parametrize("index,expected", [

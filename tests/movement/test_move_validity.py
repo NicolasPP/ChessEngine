@@ -1,13 +1,18 @@
 import pytest
 
-import movement.validate_move as validate_move
-from notation.forsyth_edwards_notation import Fen
+from chess_engine.movement.validate_move import is_destination_valid
+from chess_engine.movement.validate_move import is_from_correct_side
+from chess_engine.movement.validate_move import is_material_insufficient
+from chess_engine.movement.validate_move import is_move_valid
+from chess_engine.movement.validate_move import is_side_valid
+from chess_engine.movement.validate_move import is_stale_mate
+from chess_engine.notation.forsyth_edwards_notation import Fen
 
 
 @pytest.mark.parametrize("from_fen_val,is_white_turn,expected",
                          [('p', True, False), ('P', True, True), ('p', False, True), ('P', False, False)])
 def test_is_from_correct_side(from_fen_val: str, is_white_turn: bool, expected: bool):
-    assert validate_move.is_from_correct_side(from_fen_val, is_white_turn) is expected
+    assert is_from_correct_side(from_fen_val, is_white_turn) is expected
 
 
 @pytest.mark.parametrize("from_index,dest_index,fen,expected", [
@@ -30,7 +35,7 @@ def test_is_from_correct_side(from_fen_val: str, is_white_turn: bool, expected: 
     (28, 45, Fen("8/8/8/4N3/8/8/8/8 w KQkq - 0 1"), True),
 ])
 def test_is_destination_valid(from_index: int, dest_index: int, fen: Fen, expected: bool):
-    assert validate_move.is_destination_valid(from_index, dest_index, fen) is expected
+    assert is_destination_valid(from_index, dest_index, fen) is expected
 
 
 @pytest.mark.parametrize("from_index,dest_index,fen,expected", [
@@ -40,7 +45,7 @@ def test_is_destination_valid(from_index: int, dest_index: int, fen: Fen, expect
     (4, 0, Fen("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1"), True)
 ])
 def test_is_side_valid(from_index: int, dest_index: int, fen: Fen, expected: bool):
-    assert validate_move.is_side_valid(from_index, dest_index, fen) is expected
+    assert is_side_valid(from_index, dest_index, fen) is expected
 
 
 @pytest.mark.parametrize("fen,from_index,expected", [
@@ -50,7 +55,7 @@ def test_is_side_valid(from_index: int, dest_index: int, fen: Fen, expected: boo
 
 ])
 def is_from_valid(fen: Fen, from_index: int, expected: bool):
-    assert validate_move.is_from_valid(fen, from_index) is expected
+    assert is_from_valid(fen, from_index) is expected
 
 
 @pytest.mark.parametrize("from_index,dest_index,fen,expected", [
@@ -74,7 +79,7 @@ def is_from_valid(fen: Fen, from_index: int, expected: bool):
     (28, 45, Fen("8/8/8/4N3/8/8/8/8 w KQkq - 0 1"), True),
 ])
 def test_is_move_valid(from_index: int, dest_index: int, fen: Fen, expected: bool):
-    assert validate_move.is_move_valid(from_index, dest_index, fen) is expected
+    assert is_move_valid(from_index, dest_index, fen) is expected
 
 
 @pytest.mark.parametrize("fen", [
@@ -82,7 +87,7 @@ def test_is_move_valid(from_index: int, dest_index: int, fen: Fen, expected: boo
     Fen("k7/7R/8/7p/5p1P/b4N2/8/RQ5K b - - 0 1")
 ])
 def test_is_stale_mate(fen: Fen):
-    assert validate_move.is_stale_mate(fen)
+    assert is_stale_mate(fen)
 
 
 @pytest.mark.parametrize("fen,expected", [
@@ -97,4 +102,4 @@ def test_is_stale_mate(fen: Fen):
     (Fen("kp6/8/8/8/8/8/8/7K w KQkq - 0 1"), False),
 ])
 def test_is_material_insufficient(fen: Fen, expected: bool):
-    assert validate_move.is_material_insufficient(fen) == expected
+    assert is_material_insufficient(fen) == expected

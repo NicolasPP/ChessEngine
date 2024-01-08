@@ -1,7 +1,7 @@
 import pytest
 
-import movement.validate_move as validate_move
-from notation.forsyth_edwards_notation import Fen
+from chess_engine.notation.forsyth_edwards_notation import Fen
+from chess_engine.movement.validate_move import is_checkmate
 
 
 @pytest.mark.parametrize("fen", [
@@ -12,8 +12,8 @@ from notation.forsyth_edwards_notation import Fen
     Fen('6Rk/8/5N2/8/8/8/8/8 b KQkq - 0 1')
 ])
 def test_checkmate(fen: Fen):
-    assert validate_move.is_checkmate(fen)
+    assert is_checkmate(fen)
 
 
 def test_false_checkmate():
-    assert validate_move.is_checkmate(Fen("k7/2Q5/8/8/8/8/8/7K w - - 0 1")) is False
+    assert is_checkmate(Fen("k7/2Q5/8/8/8/8/8/7K w - - 0 1")) is False

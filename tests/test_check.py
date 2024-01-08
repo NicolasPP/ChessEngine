@@ -1,17 +1,17 @@
 import pytest
 
-import movement.validate_move as validate_move
-from movement.piece_movement import get_available_moves
-from notation.forsyth_edwards_notation import Fen
-from notation.forsyth_edwards_notation import FenChars
+from chess_engine.movement.piece_movement import get_available_moves
+from chess_engine.movement.validate_move import is_check
+from chess_engine.notation.forsyth_edwards_notation import Fen
+from chess_engine.notation.forsyth_edwards_notation import FenChars
 
 
 def test_check():
-    assert validate_move.is_check(Fen('8/8/8/3PpP2/3pkp2/3PpP2/8/8 b KQkq - 0 1'))
+    assert is_check(Fen('8/8/8/3PpP2/3pkp2/3PpP2/8/8 b KQkq - 0 1'))
 
 
 def test_not_in_check():
-    assert not validate_move.is_check(Fen())
+    assert not is_check(Fen())
 
 
 def test_moving_into_check():
@@ -28,7 +28,7 @@ def test_moving_into_check():
     (Fen('2Q3k1/6pp/7q/8/8/8/8/8 b KQkq - 0 1'), 'k')
 ])
 def test_get_out_check(fen: Fen, piece_fen_val: str):
-    assert validate_move.is_check(fen)
+    assert is_check(fen)
     for index, fen_val in enumerate(fen.expanded):
         if fen_val is FenChars.BLANK_PIECE:
             continue

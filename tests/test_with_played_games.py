@@ -1,11 +1,11 @@
 import pytest
 
-from movement.validate_move import is_move_valid
-from notation.forsyth_edwards_notation import Fen
-from notation.portable_game_notation import PortableGameNotation
-from notation.portable_game_notation import generate_move_text
-from notation.portable_game_notation import get_an_from_pgn_game
-from notation.portable_game_notation import PGNGame
+from chess_engine.movement.validate_move import is_move_valid
+from chess_engine.notation.forsyth_edwards_notation import Fen
+from chess_engine.notation.portable_game_notation import PortableGameNotation
+from chess_engine.notation.portable_game_notation import generate_move_text
+from chess_engine.notation.portable_game_notation import get_an_from_pgn_game
+from chess_engine.notation.portable_game_notation import PGNGame
 
 
 def get_games() -> list[PGNGame]:
