@@ -29,7 +29,6 @@ def test_against_played_games(game: PGNGame):
             black_pgn = generate_move_text(fen, black_reg.from_an, black_reg.dest_an, black_reg.target_fen)
             assert pgn_move.black_move == black_pgn, f' {pgn_move.black_move}  {black_pgn}'
             assert_valid_move(fen, black_reg.from_an, black_reg.dest_an, black_reg.target_fen)
-        break
 
 
 def assert_valid_move(fen: Fen, from_an, dest_an, target_fen) -> None:
