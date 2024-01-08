@@ -3,7 +3,7 @@ import typing
 from chess_engine.notation.forsyth_edwards_notation import Fen
 from chess_engine.notation.forsyth_edwards_notation import FenChars
 from chess_engine.notation.algebraic_notation import AlgebraicNotation
-from config import BOARD_SIZE
+from chess_engine.config import BOARD_SIZE
 
 AvailableMovesGetter: typing.TypeAlias = typing.Callable[[int, Fen, None | bool], list[int]]
 

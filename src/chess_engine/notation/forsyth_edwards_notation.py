@@ -3,8 +3,8 @@ import typing
 
 from chess_engine.notation.algebraic_notation import AlgebraicNotation
 from chess_engine.notation.algebraic_notation import validate_file_and_rank
-from config import BOARD_SIZE
-from config import GAME_START_FEN
+from chess_engine.config import BOARD_SIZE
+from chess_engine.config import GAME_START_FEN
 
 
 class FenChars:

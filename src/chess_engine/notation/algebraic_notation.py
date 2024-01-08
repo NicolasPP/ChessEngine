@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import string
 
-from config import BOARD_SIZE
+from chess_engine.config import BOARD_SIZE
 
 
 class AlgebraicNotation:
